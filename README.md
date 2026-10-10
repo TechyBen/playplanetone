@@ -1,5 +1,7 @@
 # playplanetone
 
+![playplanetone showing a small ocean water world: a rendered globe beside its constructor values, geological order, level mix and palette](docs/screenshot.png)
+
 A toy procedural planet and moon generator with a PS1 look. Every world comes from a seed: rock, water and gas giant planets with many subtypes, plus moons. It's static files with no build, drawn by a small software rasteriser on a canvas.
 
 It started as the planet generator for Eternal Plight, a wyvern shoot-'em-up whose levels begin in orbit above a planet and dive through its atmosphere. The seeded randomness is shared with [playtreeone](https://github.com/TechyBen/playtreeone).
