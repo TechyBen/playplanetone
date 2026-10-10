@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>playplanetone</title>
+<style>
+  :root { --bg: #101114; --panel: #1a1c21; --line: #2c2f36; --text: #dcdde0; --dim: #80838c; --rock: #d6a648; --water: #4fd3e8; --gas: #ff8a5c; --moon: #a9adb8; }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font: 13px/1.4 system-ui, sans-serif; margin: 0; padding: 16px; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  .sub { color: var(--dim); margin: 0 0 12px; max-width: 900px; }
+  button, select, input[type=text] { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 4px; padding: 4px 8px; font: inherit; }
+  button, select { cursor: pointer; }
+  button:hover { border-color: #555; }
+  button.on { background: #3a3f4a; }
+  .bar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 12px; }
+  .bar .sep { width: 1px; height: 20px; background: var(--line); margin: 0 4px; }
+  #seed { width: 110px; font-family: ui-monospace, monospace; }
+  .top { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+  .view { display: flex; flex-direction: column; gap: 6px; width: 480px; max-width: 100%; }
+  .view .bar { margin: 0; font-size: 12px; }
+  .views { display: flex; flex-wrap: wrap; gap: 8px; }
+  .views figure { margin: 0; display: flex; flex-direction: column; gap: 2px; }
+  .views figcaption { color: var(--dim); font: 11px ui-monospace, monospace; }
+  .views canvas { width: 480px; height: 480px; max-width: 100%; image-rendering: pixelated; border: 1px solid var(--line); background: #0a0b0e; }
+  .view.both { width: auto; }
+  .view.both .views canvas { width: 360px; height: 360px; }
+  #fig2 { display: none; }
+  .view.both #fig2 { display: flex; }
+  .info { flex: 1; min-width: 260px; max-width: 520px; }
+  .box { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 8px; margin-bottom: 10px; }
+  .box h2 { font-size: 13px; margin: 0 0 6px; }
+  .name { font-size: 15px; font-weight: 600; }
+  .meta { color: var(--dim); font: 12px ui-monospace, monospace; margin: 2px 0 6px; }
+  .sl { display: grid; grid-template-columns: 104px 1fr 64px; align-items: center; gap: 6px; margin: 2px 0; }
+  .sl label { color: var(--dim); font-size: 12px; }
+  .sl input { width: 100%; }
+  .sl output { font: 12px ui-monospace, monospace; text-align: right; }
+  .meter { display: grid; grid-template-columns: 72px 1fr 40px; gap: 6px; align-items: center; margin: 2px 0; font-size: 12px; }
+  .meter span:first-child { color: var(--dim); }
+  .meter .track { height: 8px; background: #121317; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; }
+  .meter .fill { height: 100%; background: #9aa0ab; }
+  .meter span:last-child { font: 11px ui-monospace, monospace; text-align: right; color: var(--dim); }
+  ol.steps { margin: 0; padding-left: 20px; }
+  ol.steps li { margin: 2px 0; }
+  ol.steps .note { color: var(--dim); }
+  .dropped { color: var(--dim); font-size: 12px; margin-top: 4px; }
+  .swatches { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sw { display: flex; flex-direction: column; gap: 2px; font-size: 10px; color: var(--dim); }
+  .sw .ramp { display: flex; } .sw .ramp i { width: 8px; height: 14px; display: block; }
+  .hint { color: var(--dim); font-size: 12px; margin: 4px 0 0; }
+  .strip { display: flex; gap: 4px; overflow-x: auto; padding: 4px 0 8px; }
+  .chip { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 3px; border: 1px solid transparent; border-radius: 4px; cursor: pointer; font-size: 10px; color: var(--dim); }
+  .chip:hover { background: #1d2026; }
+  .chip.sel { border-color: #9aa0ab; color: var(--text); }
+  .chip canvas { width: 48px; height: 48px; image-rendering: pixelated; }
+  .chip .t { width: 48px; height: 3px; border-radius: 2px; }
+  .chip .moonmark { font-size: 9px; }
+  .t.rock { background: var(--rock); } .t.water { background: var(--water); } .t.gas { background: var(--gas); } .t.moon { background: var(--moon); }
+  .weights { font: 11px ui-monospace, monospace; color: var(--dim); }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-top: 8px; }
+  .gallery .cell { cursor: pointer; text-align: center; font-size: 11px; color: var(--dim); }
+  .gallery canvas { width: 100%; aspect-ratio: 1; image-rendering: pixelated; border: 1px solid var(--line); background: #0a0b0e; display: block; }
+  .gallery .cell:hover canvas { border-color: #777; }
+  h3 { font-size: 13px; margin: 16px 0 4px; }
+  @media (max-width: 600px) { body { padding: 12px; } .views canvas, .view.both .views canvas { width: 100%; height: auto; aspect-ratio: 1; } .views figure { width: 100%; } }
+</style>
+</head>
+<body>
+<h1>playplanetone</h1>
+<p class="sub">Planets and moons from a constructor (heat, activity, atmosphere, water, life). The constructor sets the order of geological steps, the steps build layers on the sphere (geodesic cells by default), and the layers paint the globe with pixel-art colour ramps. The level mix shows the percentages a level layout would take from this planet.</p>
+
+<div class="bar">
+  <button id="next" title="Roll the next world: type with a bias against repeats, subtype a plain roll. Every 3rd world rolls 50/50 for a moon.">Next world ▸</button>
+  <span class="sep"></span>
+  <button id="newPlanet">New planet</button>
+  <button id="newMoon">New moon</button>
+  <button id="moonOf" title="A moon built from this planet's data, muted">Moon of this planet</button>
+  <span class="sep"></span>
+  <select id="type"><option value="">Any type</option><option value="rock">Rock</option><option value="water">Water</option><option value="gas">Gas giant</option></select>
+  <select id="subtype"></select>
+  <span class="sep"></span>
+  <input type="text" id="seed" title="Seed"><button id="go">Go</button>
+</div>
+
+<div class="top">
+  <div class="view">
+    <div class="views">
+      <figure><canvas id="world" width="240" height="240"></canvas><figcaption id="cap1"></figcaption></figure>
+      <figure id="fig2"><canvas id="world2" width="240" height="240"></canvas><figcaption id="cap2"></figcaption></figure>
+    </div>
+    <div class="bar">
+      <span>Projection:</span>
+      <select id="proj" title="Where the layers live. Cube map: six square grids, four neighbours per texel. Geodesic: icosphere cells, hexagons with twelve pentagons, five or six neighbours.">
+        <option value="geo" selected>Geodesic cells</option><option value="cube">Cube map</option><option value="both">Side by side</option>
+      </select>
+    </div>
+    <div class="bar">
+      <label><input type="checkbox" id="rotate" checked> Rotate</label>
+      <label><input type="checkbox" id="clouds" checked> Clouds</label>
+      <label><input type="checkbox" id="atmo" checked> Atmosphere</label>
+      <label title="Flat-shade each triangle (faceted) or shade the smooth sphere"><input type="checkbox" id="faceted" checked> Faceted</label>
+      <label><input type="checkbox" id="wire"> Mesh</label>
+    </div>
+    <div id="sliders"></div>
+    <div class="bar"><span>Screen:</span> <button data-screen="160">160</button><button data-screen="240">240</button><button data-screen="360">360</button><button data-screen="420">420</button></div>
+  </div>
+  <div class="info">
+    <div class="box">
+      <div class="name" id="name"></div>
+      <div class="meta" id="meta"></div>
+      <div id="ctor"></div>
+    </div>
+    <div class="box">
+      <h2>Geological order</h2>
+      <ol class="steps" id="steps"></ol>
+      <div class="dropped" id="dropped"></div>
+    </div>
+    <div class="box">
+      <h2>Level mix</h2>
+      <div id="mix"></div>
+      <p class="hint">Share of the surface by area. A level built from this planet takes its layout weights from these.</p>
+    </div>
+    <div class="box">
+      <h2>Palette</h2>
+      <div class="swatches" id="palette"></div>
+    </div>
+  </div>
+</div>
+
+<h3>Run so far</h3>
+<div class="weights" id="weights"></div>
+<div class="strip" id="strip"></div>
+
+<h3>Variety</h3>
+<div class="bar">
+  <button id="roll12">Roll 12 planets</button>
+  <button id="roll12m">Roll 12 moons</button>
+  <button id="roll12s" title="12 of the selected type and subtype">Roll 12 of selection</button>
+</div>
+<div class="gallery" id="gallery"></div>
+
+<script type="module" src="src/app/main.js"></script>
+</body>
+</html>
