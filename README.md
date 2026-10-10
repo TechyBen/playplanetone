@@ -60,6 +60,7 @@ The URL hash holds the current world, so a link reopens it.
 | Path | What |
 |---|---|
 | `index.html` | The toy page |
+| `artifact.html` | The same page as a claude.ai artifact share build (published with the `src/` files beside it) |
 | `src/app/main.js` | Wires the controls, the run strip and the gallery |
 | `src/app/view.js` | Software rasteriser: icosphere triangles, z-buffer, Bayer-dithered ramps, cloud shell, atmosphere rim |
 | `src/gen/planet.js` | The generator. No DOM |

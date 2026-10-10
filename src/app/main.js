@@ -58,7 +58,7 @@ function show(s, { push = false } = {}) {
   rebuild();
   if (push) { run.push({ spec: s }); cur = run.length - 1; }
   $('seed').value = s.seed;
-  location.replace('#' + hashOf(s));
+  try { location.replace('#' + hashOf(s)); } catch {} // hosts that block hash state still work, just without the link
   drawStrip();
   draw();
 }
