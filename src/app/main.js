@@ -69,7 +69,7 @@ function nextWorld() {
   const s = rollSpec({ history: planetHistory() });
   const no = run.filter(r => r.spec.kind === 'planet').length + 1;
   show(s, { push: true });
-  // Step 3: every 3rd level rolls 50/50 for a moon. Built here from the planet's data, muted.
+  // Every 3rd world rolls 50/50 for a moon, built from the planet's data, muted.
   if (no % 3 === 0 && Math.random() < 0.5) { run.push({ spec: moonOf(s), moon: true }); drawStrip(); }
 }
 

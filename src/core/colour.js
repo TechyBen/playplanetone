@@ -1,5 +1,5 @@
-// Colour helpers shared by the texture and planet generators: HSL to RGB, and
-// the pixel-art ramp every material and skin is drawn from.
+// Colour helpers: HSL to RGB, and the pixel-art ramp every material is drawn
+// from.
 
 const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 

@@ -2,10 +2,10 @@
 //
 // A world is rolled as a spec (type, subtype, size and a constructor of heat,
 // activity, atmosphere, water and life), then built: the constructor picks an
-// order of geological steps, each step works on layers sampled on a domain (dom map or geodesic cells)
-// (height, lava, ice, sand, desert, grass, forest, canyon), and a final paint
-// turns the layers into a material and tone per texel. Colours come from the
-// same pixel-art ramps as the wyvern's field-chain textures (colour.js).
+// order of geological steps, each step works on layers sampled on a domain
+// (cube map or geodesic cells): height, lava, ice, sand, desert, grass, forest,
+// canyon. A final paint turns the layers into a material and tone per cell.
+// Colours come from the pixel-art ramps in colour.js.
 //
 // Gas giants skip the layers: latitude bands, warped and twisted by storms,
 // with flow added at render time. Moons roll from their own muted families, or
